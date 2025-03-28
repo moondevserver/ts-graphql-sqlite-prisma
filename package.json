@@ -1,5 +1,5 @@
 {
-  "name": "ts-graphql-sqlite-prisma",
+  "name": "ts-tsnode-graphql-prisma-sqlite",
   "version": "0.0.1",
   "description": "GraphQL Server with Prisma and SQLite in TypeScript",
   "main": "src/index.ts",
@@ -9,7 +9,9 @@
     "build": "tsc",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "ts-node -r module-alias/register prisma/seed.ts"
+    "prisma:seed": "ts-node -r module-alias/register prisma/seed.ts",
+    "test": "ts-node -r module-alias/register src/tests/test.ts",
+    "test:function": "ts-node -r module-alias/register src/tests/test-function.ts"
   },
   "_moduleAliases": {
     "@": "src"
@@ -21,10 +23,15 @@
     "@apollo/server": "^4.10.0",
     "@graphql-tools/merge": "^9.0.2",
     "@prisma/client": "^5.10.0",
+    "@types/adm-zip": "^0.5.7",
+    "@types/mime-types": "^2.1.4",
+    "adm-zip": "^0.5.16",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
+    "exifr": "^7.1.3",
     "express": "^4.18.2",
     "graphql": "^16.8.1",
+    "mime-types": "^3.0.1",
     "module-alias": "^2.2.3"
   },
   "devDependencies": {
