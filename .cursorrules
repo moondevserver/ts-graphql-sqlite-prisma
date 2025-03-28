@@ -1,0 +1,17 @@
+## Code Guidelines
+
+### TypeScript Guidelines
+- type에 `any` 사용 가능
+- arrow function 사용
+- 함수 개별적으로 export 하지 않고, 파일 하단에 모아서, `export { fun1, fun2, fun3, ... }`
+- index.ts 가 있는 경우, 폴더 내의 다른 함수들은 모두 index.ts 에서 export
+- type 파일은 모두 `src/types.ts` 파일에 일괄 저장
+
+### Naming Conventions
+  - Use camelCase for functions and variables
+  - Use UPPER_CASE for constants
+  - Use kebab-case for file names
+
+### Documentation
+- Add JSDoc comments for functions
+- Add usage examples in comments
