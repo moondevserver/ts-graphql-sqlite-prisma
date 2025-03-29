@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  selenium:
+    image: selenium/standalone-chrome:latest
+    shm_size: '2gb'
+    ports:
+      - '4444:4444'
+      - '7900:7900'
+      - '4000:4000'
+    volumes:
+      - .:/app
+    environment:
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_SESSION_TIMEOUT=300
+      - START_XVFB=false
+      - SELENIUM_REMOTE_URL=http://localhost:4444/wd/hub
+    working_dir: /app

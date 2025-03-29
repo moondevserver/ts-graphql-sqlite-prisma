@@ -75,3 +75,41 @@ npm login {{github-id}}
 # macos
 ./publish.sh
 ```
+
+
+## docker
+
+```sh
+docker-compose down -v
+
+docker-compose up -d
+docker-compose exec selenium bash
+
+
+sudo apt-get update
+sudo apt-get install -y curl
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+
+cd /app
+npm install
+
+npx ts-node -r module-alias/register src/tests/lib.web.chromeBasic.ts
+# docker-compose up -d --build
+
+----
+
+docker-compose exec app /bin/bash
+
+cd /app
+npx ts-node -r module-alias/register src/tests/lib.web.chromeBasic.ts
+
+
+docker-compose exec app npx ts-node -r module-alias/register src/tests/lib.web.chromeBasic.ts
+
+docker-compose exec app npm install -g ts-node typescript
+```
+
+
+
