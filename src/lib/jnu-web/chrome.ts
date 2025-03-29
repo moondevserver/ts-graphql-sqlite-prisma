@@ -28,6 +28,7 @@ interface WaitOptions {
 
 class Chrome {
   public driver!: WebDriver;
+  private options: chrome.Options;
 
   constructor(
     options: {
@@ -36,18 +37,18 @@ class Chrome {
       email?: string;
       userDataDir?: string;
       arguments?: string[];
-    } = { headless: false, profileName: '', email: '', userDataDir: '', arguments: [] }
+    } = {}
   ) {
-    this.initializeDriver(options);
+    this.options = this.createChromeOptions(options);
   }
 
-  private async initializeDriver(options: {
+  private createChromeOptions(options: {
     headless?: boolean;
     profileName?: string;
     email?: string;
     userDataDir?: string;
     arguments?: string[];
-  }) {
+  }): chrome.Options {
     const chromeOptions = new chrome.Options();
 
     // 기본 옵션 설정
@@ -58,7 +59,7 @@ class Chrome {
     const profileName = options.profileName ?? getProfileByEmail(options.email, options.userDataDir) ?? null;
 
     // 프로필 설정
-    if (profileName) {
+    if (profileName && options.userDataDir) {
       chromeOptions.addArguments(`--user-data-dir=${options.userDataDir}`);
       chromeOptions.addArguments(`--profile-directory=${profileName}`);
     }
@@ -78,7 +79,6 @@ class Chrome {
       '--disable-notifications',
       '--disable-infobars',
       '--ignore-certificate-errors',
-      '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', // 최신 Chrome 유저 에이전트
     ];
 
     // 기본 인자와 사용자 지정 인자를 합치기
@@ -100,21 +100,29 @@ class Chrome {
       'profile.default_content_settings.popups': 0,
     });
 
-    // 드라이버 초기화
-    this.driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
+    return chromeOptions;
+  }
 
-    // CDP를 통한 추가 설정
-    this.driver.executeScript(`
-      // navigator.webdriver 속성 제거
-      Object.defineProperty(navigator, 'webdriver', {
-        get: () => undefined
-      });
+  async init(): Promise<void> {
+    try {
+      this.driver = await new Builder().forBrowser('chrome').setChromeOptions(this.options).build();
 
-      // Chrome 자동화 관련 속성 제거
-      delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
-      delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
-      delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
-    `);
+      // CDP를 통한 추가 설정
+      await this.driver.executeScript(`
+        // navigator.webdriver 속성 제거
+        Object.defineProperty(navigator, 'webdriver', {
+          get: () => undefined
+        });
+
+        // Chrome 자동화 관련 속성 제거
+        delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
+        delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
+        delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
+      `);
+    } catch (error) {
+      console.error('Chrome 드라이버 초기화 중 오류 발생:', error);
+      throw error;
+    }
   }
 
   async getFullSize() {

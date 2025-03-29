@@ -94,7 +94,7 @@ const gqlWithValues = (query: string | undefined, values: any) => {
   return !query ? query : query.replace(/\$\{?(\w+)\}?/g, (match: any, key) => values[key] || match); // 키에 해당하는 값이 없다면, 매치된 문자열 그대로 반환
 };
 // * req
-const reqGql = async (url: string, { query, values, config }: ReqGqlParams = {}) => {
+const reqGql = async (url: string, { query, values }: ReqGqlParams = {}) => {
   query = gqlWithValues(query, values);
   const response = await axios.post(url, { query }, { httpsAgent: agent });
   return response.data;
